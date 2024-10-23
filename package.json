@@ -1,12 +1,22 @@
 {
-  "name": "small-folk",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
-}
+    "name": "small-folk",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+      "build": "pnpm -r build",
+      "test": "pnpm -r test",
+      "lint": "pnpm -r lint",
+      "format": "prettier --write .",
+      "new:exercise": "pnpm --filter exercises init",
+      "new:lib": "node scripts/init-lib.js"
+    },
+    "devDependencies": {
+      "@stylistic/eslint-plugin": "^1.6.3",
+      "eslint": "^8.57.0",
+      "eslint-config-prettier": "^9.1.0",
+      "eslint-plugin-import": "^2.29.1",
+      "lefthook": "^1.6.1",
+      "prettier": "^3.2.5"
+    }
+  }

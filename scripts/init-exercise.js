@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { toClassName } from './utils.js';
 
 const EXERCISES_PATH = path.join('packages', 'exercises', 'src');
 const MAIN_INDEX_PATH = path.join('packages', 'exercises', 'src', 'index.js');
@@ -35,14 +36,16 @@ const createExerciseFiles = async (name) => {
     const readme = readmeTemplate.replace(/\{\{name\}\}/g, name);
     await fs.writeFile(path.join(exercisePath, 'README.md'), readme);
 
+    const functionName = toClassName(name);
+
     // Create index.js
     await fs.writeFile(
       path.join(exercisePath, 'index.js'),
       `/**
  * ${name} exercise implementation
  */
-export const ${name.replace(/-([a-z])/g, (g) => g[1].toUpperCase())} = () => {
-  // TODO: Implement your solution
+export const ${functionName} = {
+// TODO: Implement your solution
 };\n`
     );
 
@@ -50,18 +53,18 @@ export const ${name.replace(/-([a-z])/g, (g) => g[1].toUpperCase())} = () => {
     await fs.writeFile(
       path.join(exercisePath, 'index.test.js'),
       `import { describe, it, expect } from 'vitest';
-import { ${name.replace(/-([a-z])/g, (g) => g[1].toUpperCase())} } from './index.js';
+import { ${functionName} } from './index.js';
 
-describe('${name}', () => {
+describe('${functionName}', () => {
   it('should be implemented', () => {
-    expect(${name.replace(/-([a-z])/g, (g) => g[1].toUpperCase())}()).toBeDefined();
+    expect(${functionName}.solve()).toBeDefined();
   });
 });\n`
     );
 
     // Update main index.js
     const currentContent = await fs.readFile(MAIN_INDEX_PATH, 'utf-8');
-    const newExport = `export * from './exercises/${name}/index.js';\n`;
+    const newExport = `export { ${functionName} } from './exercises/${name}/index.js';\n`;
 
     if (!currentContent.includes(newExport)) {
       await fs.writeFile(
@@ -88,7 +91,6 @@ if (!name) {
 }
 
 try {
-  console.log('🚀 Initializing exercise...');
   const validName = validateName(name);
   await createExerciseFiles(validName);
 } catch (error) {

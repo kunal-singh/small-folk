@@ -84,7 +84,7 @@ describe('@small-folk/${name}', () => {
     // Create vite.config.js
     await fs.writeFile(
       path.join(libPath, 'vite.config.js'),
-      `import { createLibConfig } from '../../vite.config.base.js';
+      `import { createLibConfig } from '../../../vite.config.base.js';
 
 export default createLibConfig({
   entry: 'src/index.js',

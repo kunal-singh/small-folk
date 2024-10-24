@@ -1,11 +1,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+const LIBS_PATH = path.join('packages', 'libs');
+
 const validateName = (name) => {
-  const valid = /^[a-z0-9-]+$/i.test(name);
+  const valid = /^[a-z0-9][a-z0-9-]{0,48}[a-z0-9]$/i.test(name);
   if (!valid) {
     throw new Error(
-      'Library name must contain only letters, numbers, and hyphens'
+      'Library name must start and end with a letter or number, contain only letters, numbers, and hyphens, and be between 1 and 50 characters long'
     );
   }
   return name.toLowerCase();
@@ -13,7 +15,15 @@ const validateName = (name) => {
 
 const createLibFiles = async (name) => {
   try {
-    const libPath = path.join('packages', 'libs', name);
+    const libPath = path.join(LIBS_PATH, name);
+
+    // Check if folder already exists
+    try {
+      await fs.access(libPath);
+      throw new Error(`Library '${name}' already exists`);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
 
     // Create directory
     await fs.mkdir(libPath, { recursive: true });
@@ -48,12 +58,6 @@ const createLibFiles = async (name) => {
         null,
         2
       )
-    );
-
-    // Create README.md
-    await fs.writeFile(
-      path.join(libPath, 'README.md'),
-      `# @small-folk/${name}\n`
     );
 
     // Create src/index.js

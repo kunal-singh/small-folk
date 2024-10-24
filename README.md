@@ -1,2 +1,4 @@
 # small-folk
-shims, polyfills and other javascript utilities - for practice only, not for production..yet.
+
+A collection of javascript exercises and libraries made for learning javascript core concepts and system design.
+

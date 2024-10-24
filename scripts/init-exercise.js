@@ -4,7 +4,9 @@ import path from 'node:path';
 const validateName = (name) => {
   const valid = /^[a-z0-9-]+$/i.test(name);
   if (!valid) {
-    throw new Error('Exercise name must contain only letters, numbers, and hyphens');
+    throw new Error(
+      'Exercise name must contain only letters, numbers, and hyphens'
+    );
   }
   return name.toLowerCase();
 };
@@ -12,16 +14,13 @@ const validateName = (name) => {
 const createExerciseFiles = async (name) => {
   try {
     const exercisePath = path.join('src', 'exercises', name);
-    
+
     // Create directory
     await fs.mkdir(exercisePath, { recursive: true });
-    
+
     // Create README.md
-    await fs.writeFile(
-      path.join(exercisePath, 'README.md'),
-      `# ${name}\n`
-    );
-    
+    await fs.writeFile(path.join(exercisePath, 'README.md'), `# ${name}\n`);
+
     // Create index.js
     await fs.writeFile(
       path.join(exercisePath, 'index.js'),
@@ -32,7 +31,7 @@ export const ${name.replace(/-([a-z])/g, (g) => g[1].toUpperCase())} = () => {
   // TODO: Implement your solution
 };\n`
     );
-    
+
     // Create test file
     await fs.writeFile(
       path.join(exercisePath, 'index.test.js'),
@@ -50,11 +49,14 @@ describe('${name}', () => {
     const mainIndexPath = path.join('src', 'index.js');
     const currentContent = await fs.readFile(mainIndexPath, 'utf-8');
     const newExport = `export * from './exercises/${name}/index.js';\n`;
-    
+
     if (!currentContent.includes(newExport)) {
       await fs.writeFile(
         mainIndexPath,
-        currentContent.replace(/\/\/ Export other exercise modules here/, `${newExport}// Export other exercise modules here`)
+        currentContent.replace(
+          /\/\/ Export other exercise modules here/,
+          `${newExport}// Export other exercise modules here`
+        )
       );
     }
 

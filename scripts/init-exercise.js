@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const EXERCISES_PATH = path.join('src', 'exercises');
-const MAIN_INDEX_PATH = path.join('src', 'index.js');
+const EXERCISES_PATH = path.join('packages', 'exercises', 'src');
+const MAIN_INDEX_PATH = path.join('packages', 'exercises', 'src', 'index.js');
 const README_TEMPLATE_PATH = 'exercise-readme.md';
 
 const validateName = (name) => {
@@ -28,7 +28,7 @@ const createExerciseFiles = async (name) => {
     }
 
     // Create directory
-    await fs.mkdir(exercisePath, { recursive: true });
+    await fs.mkdir(exercisePath);
 
     // Create README.md using template
     const readmeTemplate = await fs.readFile(README_TEMPLATE_PATH, 'utf-8');
@@ -88,6 +88,7 @@ if (!name) {
 }
 
 try {
+  console.log('🚀 Initializing exercise...');
   const validName = validateName(name);
   await createExerciseFiles(validName);
 } catch (error) {

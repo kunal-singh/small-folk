@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { toClassName } from './utils.js';
 
 const LIBS_PATH = path.join('packages', 'libs');
 
@@ -60,23 +61,31 @@ const createLibFiles = async (name) => {
       )
     );
 
+    const functionName = toClassName(name);
+
     // Create src/index.js
-    await fs.mkdir(path.join(libPath, 'src'), { recursive: true });
     await fs.writeFile(
       path.join(libPath, 'src', 'index.js'),
       `/**
  * @small-folk/${name}
- */\n`
+ */
+export const ${functionName} = function() {
+  // TODO: Implement your function
+  return {
+    // Add methods or properties here
+  };
+};\n`
     );
 
     // Create test file
     await fs.writeFile(
       path.join(libPath, 'src', 'index.test.js'),
-      `import { describe, it } from 'vitest';
+      `import { describe, it, expect } from 'vitest';
+import { ${functionName} } from './index.js';
 
-describe('@small-folk/${name}', () => {
+describe('${functionName}', () => {
   it('should be implemented', () => {
-    // Add your tests here
+    expect(${functionName}()).toBeDefined();
   });
 });\n`
     );
